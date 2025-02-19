@@ -1,11 +1,11 @@
-import Product from "../../models/products.model";
+import ProductModel from "../../models/products.model";
 import { Response, Request } from "express";
 
-const createProduct = async (req: Request, res: Response) => {
+const createProducts = async (req: Request, res: Response) => {
   try {
     const { name, description, price } = req.body;
 
-    const newProduct = new Product({
+    const newProduct = new ProductModel({
       name,
       description,
       price,
@@ -19,4 +19,4 @@ const createProduct = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Err on save product", error });
   }
 };
-export default createProduct;
+export default createProducts;
