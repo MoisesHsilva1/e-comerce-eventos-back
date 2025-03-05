@@ -15,7 +15,7 @@ connectToDataBase();
 app.use(cors<Request>());
 app.use(express.json());
 
-app.use("/createProducts", postProducts);
+app.use("/postProducts", postProducts);
 app.use("/getProducts", getProducts)
 
 app.listen(port, () => console.log(`Server running on port ${port}`));

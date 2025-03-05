@@ -3,12 +3,14 @@ import { Response, Request } from "express";
 
 const createProducts = async (req: Request, res: Response) => {
   try {
-    const { name, description, price } = req.body;
+    const { name, description, price, category, amount } = req.body;
 
     const newProduct = new ProductModel({
       name,
       description,
       price,
+      category,
+      amount,
     });
 
     await newProduct.save();
