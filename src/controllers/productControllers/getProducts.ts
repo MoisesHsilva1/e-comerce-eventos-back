@@ -5,9 +5,7 @@ const getProducts = async (req: Request, res: Response) => {
   try {
     const products = await ProductModel.find();
 
-    res
-      .status(200)
-      .json({ message: "Products retrieved successfully", products });
+    res.status(200).json({ products });
   } catch (err) {
     res.status(500).json({ message: "Error fetching products", err });
   }
