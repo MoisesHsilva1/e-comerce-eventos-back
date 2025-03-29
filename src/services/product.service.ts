@@ -1,5 +1,6 @@
 import ProductModel, { Product } from "../models/products.model";
 import { Either, left, right } from "../core/either";
+import { DeleteResult } from "mongodb";
 
 type productData = {
   name?: string;
@@ -31,17 +32,20 @@ export const getAmountProducts = async (
 };
 
 export const createAllProducts = async (
+  _id?: number,
   name?: string,
   description?: string,
   price?: number,
   category?: string
 ): Promise<Either<string, Product>> => {
+  
   if (!name || !description || !price || !category) {
     return left("All fields are required");
   }
 
   try {
     const newProduct = new ProductModel({
+      _id,
       name,
       description,
       price,
@@ -55,3 +59,12 @@ export const createAllProducts = async (
     return left("Error create product");
   }
 };
+
+export const removeProduct = async (id?: number): Promise<Either<string, DeleteResult>> => {
+  try {
+    const removeOne =  await ProductModel.deleteOne({ id })
+    return right(removeOne)
+  } catch(err: any) {
+    return left("Error delete product")
+  }
+}
