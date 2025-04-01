@@ -35,7 +35,7 @@ export const getAmount = async (req: Request, res: Response): Promise<void> => {
     return;
   }
 
-  const result = await getAmountProducts(name);
+  const result = await getAmountProducts({ name });
 
   if (isRight(result)) {
     sendSuccess(res, { amountProducts: result.value });
@@ -109,11 +109,11 @@ export const searchByProductName = async (
     return;
   }
 
-  const result = await findByProductName(name);
+  const result = await findByProductName({ name });
 
   if (isRight(result)) {
     sendSuccess(res, result.value);
-    return
+    return;
   }
 
   if (isLeft(result)) {
