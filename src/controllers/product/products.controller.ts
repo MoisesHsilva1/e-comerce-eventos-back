@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
 import {
   getAmountProducts,
-  findByProductName,
+  findByProductQuery,
+  findByProductID,
 } from "../../services/product/product.search";
 import { create, remove, getAll } from "../../services/product/product.crud";
 import { isLeft, isRight } from "../../core/either";
@@ -19,7 +20,7 @@ export const getAllProducts = async (
   }
 
   if (isLeft(result)) {
-    sendError(res, "Failed to fetch products", result.value);
+    sendError(res, "Failed to fetch products", `Error: ${result.value}`);
   }
 };
 
@@ -42,7 +43,11 @@ export const getAmount = async (req: Request, res: Response): Promise<void> => {
   }
 
   if (isLeft(result)) {
-    sendError(res, "Failed to fetch product amount", result.value);
+    sendError(
+      res,
+      "Failed to fetch product amount",
+      `Error while fetching product amount for name "${name}": ${result.value}`
+    );
   }
 };
 
@@ -68,7 +73,11 @@ export const createProduct = async (
   }
 
   if (isLeft(result)) {
-    sendError(res, "Failed to create product", result.value);
+    sendError(
+      res,
+      "Failed to create product",
+      `Error while creating product "${name}": ${result.value}`
+    );
   }
 };
 
@@ -90,7 +99,11 @@ export const deleteProduct = async (
   }
 
   if (isLeft(result)) {
-    sendError(res, "Failed to delete product", result.value);
+    sendError(
+      res,
+      "Failed to delete product",
+      `Error while deleting product with ID "${_id}": ${result.value}`
+    );
   }
 };
 
@@ -109,7 +122,7 @@ export const searchByProductName = async (
     return;
   }
 
-  const result = await findByProductName({ name });
+  const result = await findByProductQuery({ name });
 
   if (isRight(result)) {
     sendSuccess(res, result.value);
@@ -117,6 +130,34 @@ export const searchByProductName = async (
   }
 
   if (isLeft(result)) {
-    sendError(res, "Failed to fetch product", result.value);
+    sendError(
+      res,
+      "Failed to fetch product",
+      `Error while searching for product with name "${name}": ${result.value}`
+    );
+  }
+};
+
+export const searchByProductID = async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  if (!id) {
+    sendError(res, "Invalid request", 'The "id" param is required');
+    return;
+  }
+
+  const result = await findByProductID(id);
+
+  if (isRight(result)) {
+    sendSuccess(res, result.value);
+    return;
+  }
+
+  if (isLeft(result)) {
+    sendError(
+      res,
+      "Failed to fetch product",
+      `Error while searching for product with ID "${id}": ${result.value}`
+    );
   }
 };

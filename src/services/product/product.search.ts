@@ -9,17 +9,28 @@ export const getAmountProducts = async (
     const amountProducts = await ProductModel.countDocuments(query);
     return right(amountProducts);
   } catch (err) {
-    return left("Error fetching amount products");
+    return left(`Error fetching amount of products: ${(err as Error).message}`);
   }
 };
 
-export const findByProductName = async (
+export const findByProductQuery = async (
   query?: QueryParams<Product>
 ): Promise<Either<string, Product[]>> => {
   try {
-    const searchByName = await ProductModel.find(query || []);
-    return right(searchByName);
+    const searchByQuery = await ProductModel.find(query || []);
+    return right(searchByQuery);
   } catch (err) {
-    return left("Error find product");
+    return left(`Error finding products by query: ${(err as Error).message}`);
+  }
+};
+
+export const findByProductID = async (
+  id?: QueryParams<string>
+): Promise<Either<string, Product | null>> => {
+  try {
+    const searchByID = await ProductModel.findById(id);
+    return right(searchByID);
+  } catch (err) {
+    return left(`Error finding product by ID: ${(err as Error).message}`);
   }
 };

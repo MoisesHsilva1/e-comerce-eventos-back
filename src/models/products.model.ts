@@ -18,5 +18,4 @@ export interface Product {
   category: string;
 }
 
-
 export default Product;
