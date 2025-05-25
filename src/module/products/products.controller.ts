@@ -1,6 +1,7 @@
-import { Controller, Get, Query, Param } from '@nestjs/common';
+import { Controller, Get, Query, Param, Post, Body } from '@nestjs/common';
 import { ApiOperation, ApiTags, ApiResponse } from '@nestjs/swagger';
 import { ProductService } from './services/products.service';
+import { CreateProductDto } from './dto/create-product.dto';
 
 @ApiTags('Products')
 @Controller('products')
@@ -9,22 +10,36 @@ export class ProductsController {
 
   @Get('/listAll')
   @ApiOperation({ summary: 'Get all Products' })
-  @ApiResponse({ status: 201, description: 'Sucess' })
+  @ApiResponse({ status: 200, description: 'Success' })
   async findAll() {
     return this.productService.findAll();
   }
 
   @Get('/searchByName')
   @ApiOperation({ summary: 'Get products by name' })
-  @ApiResponse({ status: 201, description: 'Sucess' })
+  @ApiResponse({ status: 200, description: 'Success' })
   async searchByName(@Query('name') name: string) {
     return this.productService.findByProductName(name);
   }
 
   @Get('/id/:id')
   @ApiOperation({ summary: 'Get products by id' })
-  @ApiResponse({ status: 201, description: 'Success' })
+  @ApiResponse({ status: 200, description: 'Success' })
   async searchByID(@Param('id') id: string) {
     return this.productService.findByProductID(id);
+  }
+
+  @Post('/create')
+  @ApiOperation({ summary: 'create products ' })
+  @ApiResponse({ status: 201, description: 'Success' })
+  async createProduct(@Body() createProductDto: CreateProductDto) {
+    const { name, description, price, category, image } = createProductDto;
+    return this.productService.create(
+      name,
+      description,
+      price,
+      category,
+      image,
+    );
   }
 }
