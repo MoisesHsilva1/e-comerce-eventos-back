@@ -1,7 +1,18 @@
-import { Controller, Get, Query, Param, Post, Body } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Query,
+  Param,
+  Post,
+  Body,
+  UseInterceptors,
+} from '@nestjs/common';
 import { ApiOperation, ApiTags, ApiResponse } from '@nestjs/swagger';
 import { ProductService } from './services/products.service';
 import { CreateProductDto } from './dto/create-product.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { UploadedFile } from '@nestjs/common';
+import { v2 as cloudinary } from 'cloudinary';
 
 @ApiTags('Products')
 @Controller('products')
@@ -32,14 +43,16 @@ export class ProductsController {
   @Post('/create')
   @ApiOperation({ summary: 'create products ' })
   @ApiResponse({ status: 201, description: 'Success' })
-  async createProduct(@Body() createProductDto: CreateProductDto) {
-    const { name, description, price, category, image } = createProductDto;
-    return this.productService.create(
-      name,
-      description,
-      price,
-      category,
-      image,
-    );
+  @UseInterceptors(FileInterceptor('file'))
+  async createProduct(
+    @UploadedFile() file: Express.Multer.File,
+    @Body() createProductDto: CreateProductDto,
+  ) {
+    const uploudedImage = await cloudinary.uploader.upload(file.path);
+
+    return this.productService.create({
+      ...createProductDto,
+      image: uploudedImage.secure_url,
+    });
   }
 }

@@ -1,28 +1,25 @@
 import { InjectModel } from '@nestjs/mongoose';
+import { Injectable } from '@nestjs/common';
 import { Product } from 'src/model/product.schema';
 import { Model } from 'mongoose';
 
+@Injectable()
 export class ProductService {
   constructor(
     @InjectModel(Product.name)
     private readonly productModel: Model<Product>,
   ) {}
 
-  async create(
-    name: string,
-    description: string,
-    price: number,
-    category: string,
-    image: string,
-  ): Promise<Product> {
+  async create(data: {
+    name: string;
+    description: string;
+    price: number;
+    category: string;
+    image: string;
+  }): Promise<Product> {
     const newProduct = await this.productModel.create({
-      name,
-      description,
-      price,
-      category,
-      image,
+      data,
     });
-
     return newProduct;
   }
 

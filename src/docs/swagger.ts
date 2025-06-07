@@ -8,9 +8,9 @@ export function setupSwagger(app: INestApplication): void {
       'API responsável por gerenciar as informações sobre o e-comerce-eventos.',
     )
     .setVersion('1.0')
-    .addTag('api')
+    .addTag('Rotas')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup('Api', app, document);
 }
