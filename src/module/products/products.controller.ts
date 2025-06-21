@@ -1,11 +1,32 @@
-import { Controller, Get, Query, Param, Post } from '@nestjs/common';
-import { ApiOperation, ApiTags, ApiResponse } from '@nestjs/swagger';
+import {
+  Controller,
+  Get,
+  Query,
+  Param,
+  Post,
+  UseInterceptors,
+  Body,
+  UploadedFile,
+  BadRequestException,
+} from '@nestjs/common';
+import {
+  ApiOperation,
+  ApiTags,
+  ApiResponse,
+  ApiConsumes,
+} from '@nestjs/swagger';
 import { ProductService } from './services/products.service';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { CreateProductDto } from './dto/create-product.dto';
+import { CloudinaryService } from 'src/lib/cloudinary/service/cloudinary.service';
 
 @ApiTags('Products')
 @Controller('products')
 export class ProductsController {
-  constructor(private readonly productService: ProductService) {}
+  constructor(
+    private readonly productService: ProductService,
+    private readonly cloudinaryService: CloudinaryService,
+  ) {}
 
   @Get('/listAll')
   @ApiOperation({ summary: 'Get all Products' })
@@ -31,5 +52,19 @@ export class ProductsController {
   @Post('/create')
   @ApiOperation({ summary: 'create products ' })
   @ApiResponse({ status: 201, description: 'Success' })
-  async createProduct() {}
+  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(FileInterceptor('image'))
+  async createProduct(
+    @UploadedFile() file: Express.Multer.File,
+    @Body() body: CreateProductDto,
+  ) {
+    const uploadedImage = await this.cloudinaryService.uploadImage(file);
+
+    const product = await this.productService.create({
+      ...body,
+      image: uploadedImage.secure_url,
+    });
+
+    return product;
+  }
 }

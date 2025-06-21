@@ -17,9 +17,7 @@ export class ProductService {
     category: string;
     image: string;
   }): Promise<Product> {
-    const newProduct = await this.productModel.create({
-      data,
-    });
+    const newProduct = await this.productModel.create(data);
     return newProduct;
   }
 

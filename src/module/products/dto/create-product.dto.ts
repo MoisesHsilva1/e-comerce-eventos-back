@@ -1,4 +1,5 @@
 import { IsString, IsNumber } from 'class-validator';
+import { Transform } from 'class-transformer';
 
 export class CreateProductDto {
   @IsString()
@@ -10,7 +11,7 @@ export class CreateProductDto {
   @IsString()
   category: string;
 
+  @Transform(({ value }) => Number(value))
   @IsNumber()
   price: number;
-  
 }

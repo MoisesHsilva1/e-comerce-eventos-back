@@ -18,9 +18,7 @@ import { userModule } from './module/users/user.module';
         base64: configService.get<string>('FIREBASE_SERVICE_ACCOUNT_BASE64'),
         auth: {
           config: {
-            extractor: ExtractJwt.fromAuthHeaderAsBearerToken(),
-            checkRevoked: true,
-            validateRole: true,
+            extractor: ExtractJwt.fromAuthHeaderAsBearerToken()
           },
         },
       }),
