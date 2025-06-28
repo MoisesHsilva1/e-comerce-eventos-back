@@ -1,23 +1,21 @@
-import { Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Put } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UserService } from './service/user.service';
-import { FirebaseGuard, FirebaseUser } from '@alpha018/nestjs-firebase-auth';
 import { User } from 'src/module/user/model/user.model';
+import { CreateUserDto } from './dto/createuser.dto';
 
 @ApiTags('User')
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @UseGuards(FirebaseGuard)
-  @Post('/create')
+  @Put('/create')
   @ApiOperation({ summary: 'Create users' })
   @ApiResponse({ status: 201, description: 'Success' })
-  async createUser(@FirebaseUser() firebaseUser): Promise<User> {
-    const { uid, email, name } = firebaseUser;
+  async createUser(@Body() createUserDto: CreateUserDto): Promise<User> {
+    const { email, name } = createUserDto;
 
     const newUser = await this.userService.create({
-      uid,
       email,
       name,
     });
