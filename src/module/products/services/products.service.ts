@@ -1,6 +1,6 @@
 import { InjectModel } from '@nestjs/mongoose';
 import { Injectable } from '@nestjs/common';
-import { Product } from 'src/model/product.model';
+import { Product } from 'src/module/products/model/product.model';
 import { Model } from 'mongoose';
 
 @Injectable()
@@ -41,5 +41,9 @@ export class ProductService {
     }
 
     return [product];
+  }
+
+  async deleteProduct(id: string) {
+    return this.productModel.deleteOne({ _id: id });
   }
 }

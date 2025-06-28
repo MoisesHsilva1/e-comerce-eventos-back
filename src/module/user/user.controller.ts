@@ -2,7 +2,7 @@ import { Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UserService } from './service/user.service';
 import { FirebaseGuard, FirebaseUser } from '@alpha018/nestjs-firebase-auth';
-import { User } from 'src/model/user.model';
+import { User } from 'src/module/user/model/user.model';
 
 @ApiTags('User')
 @Controller('user')

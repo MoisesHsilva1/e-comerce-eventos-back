@@ -7,7 +7,8 @@ import {
   UseInterceptors,
   Body,
   UploadedFile,
-  BadRequestException,
+  Put,
+  Delete,
 } from '@nestjs/common';
 import {
   ApiOperation,
@@ -18,7 +19,7 @@ import {
 import { ProductService } from './services/products.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CreateProductDto } from './dto/create-product.dto';
-import { CloudinaryService } from 'src/lib/cloudinary/service/cloudinary.service';
+import { CloudinaryService } from 'src/module/image/service/cloudinary.service';
 
 @ApiTags('Products')
 @Controller('products')
@@ -49,7 +50,14 @@ export class ProductsController {
     return this.productService.findByProductID(id);
   }
 
-  @Post('/create')
+  @Delete("/delete/:id")
+  @ApiOperation({ summary: "Delete product by id"})
+  @ApiResponse({ status: 204, description: "Sucess"})
+  async deleteProduct(@Param("id") id: string) {
+    return this.productService.deleteProduct(id)
+  }
+
+  @Put('/create')
   @ApiOperation({ summary: 'create products ' })
   @ApiResponse({ status: 201, description: 'Success' })
   @ApiConsumes('multipart/form-data')
