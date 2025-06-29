@@ -15,10 +15,15 @@ export class UserService {
     return this.userModel.findOne({ uid }).exec();
   }
 
-  async create(userData: { name: string; email: string }): Promise<User> {
+  async create(userData: {
+    name: string;
+    email: string;
+    password: string;
+  }): Promise<User> {
     const firebaseUser = await this.firebaseApp.auth().createUser({
-      email: userData.email,
       displayName: userData.name,
+      email: userData.email,
+      password: userData.password,
     });
 
     const createdUser = new this.userModel({

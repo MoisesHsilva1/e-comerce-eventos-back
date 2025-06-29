@@ -13,11 +13,12 @@ export class UserController {
   @ApiOperation({ summary: 'Create users' })
   @ApiResponse({ status: 201, description: 'Success' })
   async createUser(@Body() createUserDto: CreateUserDto): Promise<User> {
-    const { email, name } = createUserDto;
+    const { email, name, password } = createUserDto;
 
     const newUser = await this.userService.create({
       email,
       name,
+      password,
     });
 
     return newUser;
