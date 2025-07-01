@@ -3,7 +3,6 @@ import {
   Get,
   Query,
   Param,
-  Post,
   UseInterceptors,
   Body,
   UploadedFile,
@@ -20,6 +19,7 @@ import { ProductService } from './services/products.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CreateProductDto } from './dto/create-product.dto';
 import { CloudinaryService } from 'src/module/image/service/cloudinary.service';
+import { DeleteResult } from 'mongoose';
 
 @ApiTags('Products')
 @Controller('products')
@@ -50,11 +50,11 @@ export class ProductsController {
     return this.productService.findByProductID(id);
   }
 
-  @Delete("/delete/:id")
-  @ApiOperation({ summary: "Delete product by id"})
-  @ApiResponse({ status: 204, description: "Sucess"})
-  async deleteProduct(@Param("id") id: string) {
-    return this.productService.deleteProduct(id)
+  @Delete('/delete/:id')
+  @ApiOperation({ summary: 'Delete product by id' })
+  @ApiResponse({ status: 204, description: 'Sucess' })
+  async deleteProduct(@Param('id') id: string): Promise<DeleteResult> {
+    return this.productService.deleteProduct(id);
   }
 
   @Put('/create')
