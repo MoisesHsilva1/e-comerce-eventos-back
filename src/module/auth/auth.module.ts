@@ -1,4 +1,5 @@
 import { forwardRef, Global, Module } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import * as admin from 'firebase-admin';
 import { AuthController } from './auth.controller';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -17,11 +18,12 @@ import { AuthService } from './service/auth.service';
     AuthService,
     {
       provide: 'FIREBASE_ADMIN',
-      useFactory: async () => {
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => {
         const app = admin.initializeApp({
           credential: admin.credential.cert({
-            projectId: process.env.FIREBASE_PROJECT_ID as string,
-            clientEmail: process.env.FIREBASE_CLIENT_EMAIL as string,
+            projectId: configService.get<string>('firebase.project_id'),
+            clientEmail: configService.get<string>('firebase.client_email'),
             privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(
               /\\n/g,
               '\n',
