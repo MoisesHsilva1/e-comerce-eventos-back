@@ -11,8 +11,6 @@ on:
 jobs:
   build-and-lint:
     runs-on: ubuntu-latest
-    outputs:
-      image-tag: myapp:latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -36,16 +34,18 @@ jobs:
       - name: Lint code
         run: npm run lint --if-present
 
-      - name: Build Docker image
-        run: |
-          docker build -t myapp:latest .
-
   snyk-scan:
     needs: build-and-lint
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code 
         uses: actions/checkout@v2
+
+      - name: Setup Docker
+        run: docker --version
+
+      - name: Build Docker image 
+        run: docker build -t myapp:latest .
 
       - name: Install Snyk CLI
         run: npm install -g snyk
