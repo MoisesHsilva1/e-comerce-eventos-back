@@ -39,18 +39,28 @@ jobs:
       - name: Build Docker image
         run: |
           docker build -t myapp:latest .
-  
+
   snyk-scan:
     needs: build-and-lint
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code 
+        uses: actions/checkout@v2
+
+      - name: Install Snyk CLI
+        run: npm install -g snyk
+
+      - name: Run Snyk on project dependencies
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        run: snyk test --all-projects
+
       - name: Run Snyk Docker image scan
         uses: snyk/actions/docker@master
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
           image: myapp:latest
-          continue-on-error: false
 
   deploy:
     needs: snyk-scan
