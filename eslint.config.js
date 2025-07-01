@@ -1,4 +1,4 @@
-import { FlatCompat } from '@eslint/eslintrc';
+const { FlatCompat } = require('@eslint/eslintrc');
 
 const compat = new FlatCompat({
   preprocessors: {
@@ -6,7 +6,7 @@ const compat = new FlatCompat({
   },
 });
 
-export default [
+module.exports = [
   ...compat.extends(
     'plugin:@typescript-eslint/recommended',
     'plugin:prettier/recommended',
