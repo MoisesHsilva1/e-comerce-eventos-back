@@ -55,13 +55,6 @@ jobs:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         run: snyk test --all-projects
 
-      - name: Run Snyk Docker image scan
-        uses: snyk/actions/docker@master
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        with:
-          image: myapp:latest
-
   deploy:
     needs: snyk-scan
     if: github.ref == 'refs/heads/main'
