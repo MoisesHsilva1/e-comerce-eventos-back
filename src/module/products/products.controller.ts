@@ -1,20 +1,5 @@
-import {
-  Controller,
-  Get,
-  Query,
-  Param,
-  UseInterceptors,
-  Body,
-  UploadedFile,
-  Put,
-  Delete,
-} from '@nestjs/common';
-import {
-  ApiOperation,
-  ApiTags,
-  ApiResponse,
-  ApiConsumes,
-} from '@nestjs/swagger';
+import { Body, Controller, Delete, Get, Param, Post, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { ApiConsumes, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ProductService } from './services/products.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -52,12 +37,12 @@ export class ProductsController {
 
   @Delete('/delete/:id')
   @ApiOperation({ summary: 'Delete product by id' })
-  @ApiResponse({ status: 204, description: 'Sucess' })
+  @ApiResponse({ status: 204, description: 'Success' })
   async deleteProduct(@Param('id') id: string): Promise<DeleteResult> {
     return this.productService.deleteProduct(id);
   }
 
-  @Put('/create')
+  @Post('/create')
   @ApiOperation({ summary: 'create products ' })
   @ApiResponse({ status: 201, description: 'Success' })
   @ApiConsumes('multipart/form-data')
@@ -68,11 +53,9 @@ export class ProductsController {
   ) {
     const uploadedImage = await this.cloudinaryService.uploadImage(file);
 
-    const product = await this.productService.create({
+    return await this.productService.create({
       ...body,
       image: uploadedImage.secure_url,
     });
-
-    return product;
   }
 }
